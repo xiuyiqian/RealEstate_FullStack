@@ -73,10 +73,12 @@ export const login = async (req,res) => {
             expiresIn: cookieDuratoin 
         })
   
+        const {userPwd, ...userInfoWithoutPwd} = user;
+
         res.cookie("token", token,{
             httpOnly:true,
             maxAge: cookieDuratoin
-        }).status(200).json({message:"login success"});
+        }).status(200).json({message:"login success",userInfoWithoutPwd});
 
     }catch(err){
         console.error(err);
