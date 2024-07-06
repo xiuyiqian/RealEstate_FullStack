@@ -4,6 +4,7 @@ import loginoutReg from './routes/auth.js';
 import testRoute from './routes/test.js';
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import userRoute from './routes/user.js'
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors({
 app.use('/api/v3/posts', postRoute);
 app.use('/api/v3/auth', loginoutReg);
 app.use('/api/v3/test', testRoute)
+app.use('/api/v3/user',userRoute)
 
 const port = 8080;
 app.listen(port, () => {
