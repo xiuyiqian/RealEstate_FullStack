@@ -20,6 +20,7 @@ export const register = async (req,res) => {
                 password: hashPassword
             }
         });
+        
         console.log(firstuser);
     
         res.status(201).json( {
@@ -68,10 +69,10 @@ export const login = async (req,res) => {
         const cookieDuratoin = 30 * 24 * 60 * 60 * 1000
 
         const token = jwt.sign({
-            id:user.id
-        }, process.env.JWT_SECRET_KEY,{
+            id:user.id,
+            isAdmin: true, 
             expiresIn: cookieDuratoin 
-        })
+        }, process.env.JWT_SECRET_KEY)
   
         const {userPwd, ...userInfoWithoutPwd} = user;
 
