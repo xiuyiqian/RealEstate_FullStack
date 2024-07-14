@@ -10,13 +10,19 @@ export const verifyToken = (req, res, next) => {
         return res.status(401).json({message:"not verified user"});
     }
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, async (error, payload)=>{
-        if (error){
-            res.status(403).json({message:"token not valid"});
+    const decodeToken = async (token, JWT_SECRET_KEY) => {
+        try{
+            const payload = jwt.verify(token, JWT_SECRET_KEY);
+            console.log('Token verified successfully. Payload:', payload);
+            req.userId = payload.id;
+            next();
+        } catch (error) {
+            console.error('Token verification failed:', error);
         }
-        req.userId = payload.id;
-        next();
-    });
+
+    }
+
+    decodeToken(token, process.env.JWT_SECRET_KEY);
 };
 
 export default verifyToken;

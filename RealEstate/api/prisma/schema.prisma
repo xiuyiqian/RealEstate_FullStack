@@ -20,4 +20,51 @@ model User {
   password String
   profileImage String?
   registerDate DateTime @default(now())
+  posts Post[] @relation("userPost")
+}
+
+model Post {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  address String
+  price Int
+  bedroom Int
+  bathroom Int
+  area Float
+  latitude String
+  longitude String
+  img String
+  type timeRequest
+  property PropertyType
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id], name: "userPost")
+  createdAt DateTime @default(now())
+  postDetail PostDetail? 
+}
+
+model PostDetail {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    utilities String?
+    pet String?
+    income Int
+    size Int
+    school String?
+    restaurant String?
+    transportation String?
+    postId String @db.ObjectId @unique
+    post Post @relation(fields: [postId], references: [id])
+    createdAt DateTime @default(now())
+}
+
+enum timeRequest {
+  buy 
+  shortTermRent
+  LongTermRent
+  visit
+}
+
+enum PropertyType {
+  apartment
+  house
+  land
 }
