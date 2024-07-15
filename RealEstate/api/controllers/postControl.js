@@ -20,11 +20,21 @@ export const getPost = async (req,res)=>{
     try{
         const singeld = req.params.postId;
         const singlePost = await prisma.post.findUnique({
-            where:{id: singeld}
+            where:{id: singeld},
+            include: {
+                postDetail: true,
+                user: {
+                    select : {
+                        username: true,
+                        profileImage: true
+                    }
+                }
+            },
         })
         res.status(200).json({
-            singlePost
-        })
+            singlePost,
+
+        });
     }catch(error){
         console.log("getPost fail: "+error);
         res.status(500).json({
@@ -41,8 +51,11 @@ export const addPost = async (req,res)=>{
     try{
         const newPost = await prisma.post.create({
             data:{
-               ...reqBody,
-               userId:getIDFromToken 
+               ...reqBody.postData,
+               userId:getIDFromToken,
+               postDetail: {
+                create:reqBody.postDetail,
+               }
             },
         });
         res.status(200).json({
@@ -85,6 +98,19 @@ export const putPost = async (req,res)=>{
 
 export const deletePost = async (req,res)=>{
     try{
+        const postId = req.params.postId;
+        const cookieUserId = req.userId;
+        const findPost = await prisma.post.findUnique({
+            where:{id:postId}
+        })
+        if (findPost.userId!=cookieUserId){
+            return res.status(500).json({
+                "message": "delete Posts fail: "+error
+            })
+        }
+        await prisma.post.delete({
+            where: { id: postId },
+          });
         res.status(200).json({
             "message": "delete the post sucessfully"
         })

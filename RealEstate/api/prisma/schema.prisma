@@ -27,13 +27,14 @@ model Post {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String 
   address String
+  city String
   price Int
   bedroom Int
   bathroom Int
   area Float
   latitude String
   longitude String
-  img String
+  imgs String[]
   type timeRequest
   property PropertyType
   userId String @db.ObjectId
@@ -45,6 +46,7 @@ model Post {
 model PostDetail {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     utilities String?
+    desc String?
     pet String?
     income Int
     size Int
